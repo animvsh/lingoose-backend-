@@ -1,0 +1,79 @@
+{
+  "name": "Lingoose Agent",
+  "description": "Intelligent voice AI assistant with conversation memory",
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4",
+    "temperature": 0.7,
+    "systemPrompt": "You are a helpful AI assistant with access to conversation history. Use the provided context to have natural, contextual conversations. Be friendly, helpful, and remember previous interactions with the user.",
+    "functions": [
+      {
+        "name": "get_context",
+        "description": "Get conversation history and user profile for context",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "description": "The user's unique identifier"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Number of recent conversations to fetch (default: 10)"
+            }
+          },
+          "required": ["userId"]
+        }
+      },
+      {
+        "name": "save_conversation",
+        "description": "Save a conversation message to the database",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "description": "The user's unique identifier"
+            },
+            "role": {
+              "type": "string",
+              "enum": ["user", "assistant", "system"],
+              "description": "The role of the message sender"
+            },
+            "message": {
+              "type": "string",
+              "description": "The message content"
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Additional metadata about the message"
+            }
+          },
+          "required": ["userId", "role", "message"]
+        }
+      }
+    ]
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "pNInz6obpgDQGcFmaJgB",
+    "stability": 0.5,
+    "similarityBoost": 0.75
+  },
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-2",
+    "language": "en-US"
+  },
+  "inputAudioFormat": "mulaw",
+  "outputAudioFormat": "mulaw",
+  "sampleRate": 8000,
+  "webhook": {
+    "url": "https://your-project.functions.supabase.co/twilio-webhook",
+    "method": "POST"
+  },
+  "metadata": {
+    "project": "lingooseagents",
+    "version": "1.0.0"
+  }
+} 
